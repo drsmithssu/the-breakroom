@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NURSLE — The Breakroom</title>
+<meta name="description" content="Guess the 5-letter nursing word in six tries. A new NURSLE every weekday.">
+<meta name="theme-color" content="#284379">
+<link rel="icon" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="NURSLE — The Breakroom">
+<meta property="og:description" content="Guess the 5-letter nursing word in six tries. New word every weekday.">
+<meta property="og:url" content="https://cassandrasmithssu.github.io/the-breakroom/nursle.html">
+<meta property="og:image" content="https://cassandrasmithssu.github.io/the-breakroom/og-card.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#284379; --navy-deep:#1d3258; --navy-tint:#e9eef7;
+    --gray:#7F8082; --ink:#1c2434; --sub:#4c5566;
+    --paper:#f6f7f9; --card:#ffffff;
+    --correct:#538d4e; --present:#9c8a33; --absent:#6e7275;
+    --key-correct:#497b45; --key-present:#857328;
+    --key:#d3d6da; --border:#c6c9cd; --border-active:#878a8c;
+  }
+  body.hc{ --correct:#d55e00; --present:#0072b2; --key-correct:#b84f00; --key-present:#0072b2; }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  body{font-family:"Nunito",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--paper);color:var(--ink);margin:0;display:flex;flex-direction:column;align-items:center;min-height:100vh;}
+  a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--navy);outline-offset:3px;border-radius:6px;}
+  .banner{width:100%;background:var(--navy);color:#fff;padding:10px 14px;display:flex;align-items:center;justify-content:center;gap:10px;}
+  .banner a{color:#fff;text-decoration:none;font-weight:700;font-size:.95rem;display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;}
+  .banner a:hover{background:var(--navy-deep);}
+  .logo-tile{width:26px;height:26px;border-radius:6px;background:#fff;color:var(--navy);font-weight:900;font-size:1rem;display:inline-flex;align-items:center;justify-content:center;}
+  .banner .gametitle{font-weight:900;font-size:1.1rem;margin-left:4px;}
+  main{width:100%;max-width:500px;padding:12px 12px 8px;flex:1;text-align:center;}
+  details.howto{background:var(--navy-tint);border-radius:12px;margin:4px 0 10px;text-align:left;font-size:.9rem;}
+  details.howto summary{cursor:pointer;font-weight:700;padding:10px 14px;color:var(--navy);}
+  details.howto .body{padding:0 14px 12px;line-height:1.55;}
+  .toprow{display:flex;justify-content:space-between;align-items:center;margin:2px 0 10px;gap:8px;}
+  .daytag{font-size:.78rem;background:var(--navy);color:#fff;border-radius:10px;padding:3px 12px;font-weight:700;}
+  .hc-toggle{font-size:.78rem;font-weight:700;border:2px solid var(--navy);border-radius:16px;background:#fff;color:var(--navy);padding:6px 12px;cursor:pointer;font-family:inherit;}
+  .hc-toggle[aria-pressed="true"]{background:var(--navy);color:#fff;}
+  .board{display:grid;grid-template-rows:repeat(6,1fr);gap:5px;justify-content:center;margin:0 auto 12px;}
+  .row{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;}
+  .cell{width:58px;height:58px;border:2px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;font-weight:900;text-transform:uppercase;background:#fff;color:var(--ink);}
+  @media (max-width:380px){ .cell{width:52px;height:52px;font-size:1.4rem;} }
+  .cell.filled{border-color:var(--border-active);animation:pip .1s;}
+  @keyframes pip{50%{transform:scale(1.08);}}
+  @media (prefers-reduced-motion: reduce){ .cell.filled{animation:none;} .row.shake{animation:none !important;} }
+  .cell.correct{background:var(--correct);border-color:var(--correct);color:#fff;}
+  .cell.present{background:var(--present);border-color:var(--present);color:#fff;}
+  .cell.absent{background:var(--absent);border-color:var(--absent);color:#fff;}
+  .row.shake{animation:shake .4s;}
+  @keyframes shake{0%,100%{transform:translateX(0);}20%,60%{transform:translateX(-5px);}40%,80%{transform:translateX(5px);}}
+  .kb{user-select:none;}
+  .kbrow{display:flex;justify-content:center;gap:5px;margin-bottom:6px;}
+  .key{background:var(--key);border:none;border-radius:6px;font-weight:700;font-size:.85rem;text-transform:uppercase;padding:0;height:52px;flex:1;max-width:40px;cursor:pointer;color:var(--ink);font-family:inherit;}
+  .key.wide{max-width:64px;flex:1.5;font-size:.65rem;}
+  .key.correct{background:var(--key-correct);color:#fff;}
+  .key.present{background:var(--key-present);color:#fff;}
+  .key.absent{background:var(--absent);color:#fff;}
+  .toast{position:fixed;top:18px;left:50%;transform:translateX(-50%);background:var(--navy-deep);color:#fff;padding:10px 18px;border-radius:8px;font-size:.9rem;opacity:0;pointer-events:none;transition:opacity .25s;z-index:10;}
+  .toast.show{opacity:1;}
+  .endcard{padding:6px 0;}
+  .endcard h2{margin:6px 0;font-size:1.2rem;color:var(--navy);}
+  .answer{font-size:1rem;}
+  .answer strong{letter-spacing:2px;}
+  .stats{display:flex;justify-content:center;gap:18px;margin:10px 0;font-size:.8rem;color:var(--sub);}
+  .stats b{display:block;font-size:1.3rem;color:var(--navy);}
+  .controls{display:flex;justify-content:center;gap:10px;margin-top:8px;flex-wrap:wrap;}
+  .controls button{padding:12px 22px;border-radius:24px;border:2px solid var(--navy);background:#fff;color:var(--navy);font-size:.95rem;font-weight:700;cursor:pointer;font-family:inherit;}
+  .controls .primary{background:var(--navy);color:#fff;}
+  .notice{padding:30px 10px;font-size:1rem;color:var(--sub);}
+  .archive{margin-top:8px;text-align:left;display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .archive button{padding:10px 12px;border:2px solid var(--navy);border-radius:10px;background:#fff;cursor:pointer;text-align:left;font-size:.85rem;font-family:inherit;color:var(--ink);font-weight:700;}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;}
+  footer{width:100%;background:var(--navy-deep);color:#cdd7e8;text-align:center;font-size:.85rem;padding:14px 16px;margin-top:16px;line-height:1.6;}
+</style>
+</head>
+<body>
+  <header class="banner">
+    <a href="index.html"><span class="logo-tile" aria-hidden="true">B</span> The Breakroom</a>
+    <span class="gametitle">· NURSLE</span>
+  </header>
+  <main>
+    <details class="howto">
+      <summary>How to play</summary>
+      <div class="body">
+        Guess the 5-letter nursing word in six tries. After each guess, the tiles change color:
+        the <strong>filled dark tile</strong> means right letter in the right spot, the
+        <strong>lighter gold tile</strong> means the letter is in the word but in a different spot,
+        and gray means the letter is not in the word. Every answer is a word you'll meet in
+        nursing school. Prefer stronger colors? Turn on High contrast below the puzzle number.
+      </div>
+    </details>
+    <div id="screen"></div>
+    <div class="sr-only" role="status" aria-live="polite" id="live"></div>
+  </main>
+  <footer>New word every weekday · Your streak lives on this device only</footer>
+  <div class="toast" id="toast"></div>
+
+<script src="words-nursle.js"></script>
+<script>
+"use strict";
+const SCHEDULE = window.NURSLE_SCHEDULE || {};
+const VALID = new Set(window.NURSLE_VALID || []);
+const DATES = Object.keys(SCHEDULE).sort();
+const screen = document.getElementById("screen");
+const live = document.getElementById("live");
+const params = new URLSearchParams(location.search);
+function announce(msg){ live.textContent = msg; }
+
+function todayISO(){
+  const n = new Date();
+  return n.getFullYear() + "-" + String(n.getMonth()+1).padStart(2,"0") + "-" + String(n.getDate()).padStart(2,"0");
+}
+const PREVIEW = params.get("preview");
+const GAMEDATE = PREVIEW && SCHEDULE[PREVIEW] ? PREVIEW : todayISO();
+const WORD = SCHEDULE[GAMEDATE] || null;
+const DAYNUM = WORD ? DATES.indexOf(GAMEDATE) + 1 : 0;
+
+function showToast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(t._h);
+  t._h = setTimeout(()=>t.classList.remove("show"), 1600);
+}
+
+function loadJSON(k, fb){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : fb; }catch(e){ return fb; } }
+function saveJSON(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+let stats = loadJSON("nursle-stats", {played:0, won:0, streak:0, maxStreak:0, lastWonDate:null});
+let day = loadJSON("nursle-day-" + GAMEDATE, {guesses:[], done:false, won:false});
+function saveDay(){ if(!PREVIEW) saveJSON("nursle-day-" + GAMEDATE, day); }
+
+let hc = loadJSON("nursle-hc", false);
+function applyHC(){ document.body.classList.toggle("hc", hc); }
+function toggleHC(){ hc = !hc; saveJSON("nursle-hc", hc); applyHC(); render(); }
+applyHC();
+
+let current = "";
+
+function scoreGuess(guess, answer){
+  const res = Array(5).fill("absent");
+  const a = answer.split("");
+  for(let i=0;i<5;i++){ if(guess[i]===a[i]){ res[i]="correct"; a[i]=null; } }
+  for(let i=0;i<5;i++){
+    if(res[i]==="correct") continue;
+    const j = a.indexOf(guess[i]);
+    if(j>-1){ res[i]="present"; a[j]=null; }
+  }
+  return res;
+}
+function keyStatuses(){
+  const st = {};
+  const rank = {absent:1, present:2, correct:3};
+  day.guesses.forEach(g=>{
+    const res = scoreGuess(g, WORD);
+    g.split("").forEach((ch,i)=>{
+      if(!st[ch] || rank[res[i]] > rank[st[ch]]) st[ch] = res[i];
+    });
+  });
+  return st;
+}
+
+function fmtDay(iso){
+  const [y,m,d] = iso.split("-").map(Number);
+  return new Date(y,m-1,d).toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"});
+}
+function render(){
+  if(PREVIEW === "all"){
+    let html = '<div class="notice" style="padding:10px;">Preview mode — pick a day:</div><div class="archive">';
+    DATES.forEach((d,i)=>{ html += `<button onclick="location.search='?preview=${d}'">#${i+1} · ${fmtDay(d)}</button>`; });
+    html += "</div>";
+    screen.innerHTML = html;
+    return;
+  }
+  if(!WORD){
+    const today = todayISO();
+    const dow = new Date().getDay();
+    let msg;
+    if(DATES.length && today < DATES[0]){
+      msg = "The first NURSLE drops Monday, August 24.<br>See you then! 🩺";
+    } else if(dow === 0 || dow === 6){
+      msg = "NURSLE runs Monday through Friday.<br>Enjoy the weekend — new word Monday! ☕";
+    } else {
+      msg = "NURSLE is on break for the term.<br>Watch the newsletter for the next round! 🎉";
+    }
+    screen.innerHTML = `<div class="notice">${msg}</div>`;
+    return;
+  }
+  let html = `<div class="toprow">
+    <span class="daytag">NURSLE #${DAYNUM}${PREVIEW ? " · PREVIEW " + GAMEDATE : ""}</span>
+    <button class="hc-toggle" aria-pressed="${hc}" onclick="toggleHC()">High contrast: ${hc ? "on" : "off"}</button>
+  </div>`;
+  html += '<div class="board">';
+  for(let r=0;r<6;r++){
+    html += `<div class="row" id="row${r}">`;
+    const guess = day.guesses[r];
+    if(guess){
+      const res = scoreGuess(guess, WORD);
+      const desc = guess.split("").map((ch,i)=>ch+" "+({correct:"correct",present:"wrong spot",absent:"not in word"}[res[i]])).join(", ");
+      html = html.slice(0,-1) + ` role="img" aria-label="Guess ${r+1}: ${desc}">`;
+      for(let c=0;c<5;c++) html += `<div class="cell ${res[c]}" aria-hidden="true">${guess[c]}</div>`;
+    } else if(r === day.guesses.length && !day.done){
+      for(let c=0;c<5;c++) html += `<div class="cell${current[c] ? " filled":""}">${current[c]||""}</div>`;
+    } else {
+      for(let c=0;c<5;c++) html += `<div class="cell"></div>`;
+    }
+    html += "</div>";
+  }
+  html += "</div>";
+  if(day.done){
+    html += renderEnd();
+  } else {
+    html += renderKeyboard();
+  }
+  screen.innerHTML = html;
+}
+
+function renderKeyboard(){
+  const st = keyStatuses();
+  const rows = ["QWERTYUIOP","ASDFGHJKL","⏎ZXCVBNM⌫"];
+  let html = '<div class="kb" role="group" aria-label="On-screen keyboard">';
+  rows.forEach(r=>{
+    html += '<div class="kbrow">';
+    r.split("").forEach(k=>{
+      if(k==="⏎") html += `<button class="key wide" onclick="pressKey('ENTER')">Enter</button>`;
+      else if(k==="⌫") html += `<button class="key wide" aria-label="Backspace" onclick="pressKey('BACK')">⌫</button>`;
+      else html += `<button class="key ${st[k]||""}" onclick="pressKey('${k}')">${k}</button>`;
+    });
+    html += "</div>";
+  });
+  html += "</div>";
+  return html;
+}
+
+function renderEnd(){
+  const tries = day.guesses.length;
+  const headline = day.won
+    ? ["Genius! 🎉","Impressive! 🎉","Great job! 🎉","Well done! 🎉","Got it! 😊","Phew! 😅"][tries-1]
+    : "Tough one! 📚";
+  const reveal = day.won ? "" : `<p class="answer">The word was <strong>${WORD}</strong></p>`;
+  const sd = PREVIEW ? "" : `<div class="stats">
+      <div><b>${stats.played}</b>played</div>
+      <div><b>${stats.played ? Math.round(100*stats.won/stats.played) : 0}%</b>win rate</div>
+      <div><b>${stats.streak}</b>streak</div>
+      <div><b>${stats.maxStreak}</b>best</div>
+    </div>`;
+  return `<div class="endcard">
+    <h2>${headline}</h2>
+    ${reveal}
+    ${sd}
+    <div class="controls">
+      <button class="primary" onclick="shareResults()">Share Results 📋</button>
+    </div>
+    <p style="font-size:.85rem;color:var(--sub);">Next word ${nextWordText()}.</p>
+  </div>`;
+}
+
+function nextWordText(){
+  const i = DATES.indexOf(GAMEDATE);
+  if(i === -1 || i === DATES.length-1) return "next term";
+  const nd = DATES[i+1];
+  const [y,m,d] = nd.split("-").map(Number);
+  return new Date(y,m-1,d).toLocaleDateString(undefined,{weekday:"long"});
+}
+
+function pressKey(k){
+  if(day.done || !WORD) return;
+  if(k === "ENTER"){ submit(); return; }
+  if(k === "BACK"){ current = current.slice(0,-1); render(); return; }
+  if(/^[A-Z]$/.test(k) && current.length < 5){ current += k; render(); }
+}
+document.addEventListener("keydown", e=>{
+  if(e.metaKey || e.ctrlKey || e.altKey) return;
+  if(e.key === "Enter") pressKey("ENTER");
+  else if(e.key === "Backspace") pressKey("BACK");
+  else if(/^[a-zA-Z]$/.test(e.key)) pressKey(e.key.toUpperCase());
+});
+
+function submit(){
+  if(current.length < 5){ showToast("Not enough letters"); shakeRow(); return; }
+  if(!VALID.has(current)){ showToast("Not in word list"); shakeRow(); return; }
+  day.guesses.push(current);
+  const res = scoreGuess(current, WORD);
+  const summary = current.split("").map((ch,i)=>ch+" "+({correct:"correct",present:"wrong spot",absent:"no"}[res[i]])).join(", ");
+  const won = current === WORD;
+  current = "";
+  if(won || day.guesses.length === 6){
+    day.done = true; day.won = won;
+    announce(won ? "Correct! The word was " + WORD + "." : "Out of guesses. The word was " + WORD + ".");
+    if(!PREVIEW){
+      stats.played++;
+      if(won){
+        stats.won++;
+        const i = DATES.indexOf(GAMEDATE);
+        stats.streak = (i > 0 && stats.lastWonDate === DATES[i-1]) ? stats.streak + 1 : 1;
+        stats.maxStreak = Math.max(stats.maxStreak, stats.streak);
+        stats.lastWonDate = GAMEDATE;
+      } else {
+        stats.streak = 0;
+      }
+      saveJSON("nursle-stats", stats);
+    }
+  } else {
+    announce("Guess " + day.guesses.length + " of 6: " + summary);
+  }
+  saveDay();
+  render();
+}
+function shakeRow(){
+  const row = document.getElementById("row" + day.guesses.length);
+  if(row){ row.classList.add("shake"); setTimeout(()=>row.classList.remove("shake"), 450); }
+}
+
+function shareResults(){
+  const tries = day.won ? day.guesses.length : "X";
+  const sq = hc ? {correct:"🟧", present:"🟦", absent:"⬜"} : {correct:"🟩", present:"🟨", absent:"⬜"};
+  const grid = day.guesses.map(g=>scoreGuess(g, WORD).map(r=>sq[r]).join("")).join("\n");
+  const text = `🩺 NURSLE #${DAYNUM} ${tries}/6\n${grid}\nhttps://cassandrasmithssu.github.io/the-breakroom/`;
+  const done = ()=>showToast("Copied! Paste it in your group chat 💬");
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done).catch(()=>fallbackCopy(text, done));
+  } else { fallbackCopy(text, done); }
+}
+function fallbackCopy(text, done){
+  const ta = document.createElement("textarea");
+  ta.value = text; ta.style.position="fixed"; ta.style.opacity="0";
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand("copy"); done(); }catch(e){ showToast("Couldn't copy — screenshot instead!"); }
+  document.body.removeChild(ta);
+}
+
+render();
+</script>
+</body>
+</html>

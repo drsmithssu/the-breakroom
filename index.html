@@ -3,48 +3,132 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Breakroom — SSU Nursing Games</title>
+<title>The Breakroom — Games for SSU Nursing Students</title>
+<meta name="description" content="Free practice games for nursing students: Connections, NURSLE, and Wardplay. New puzzles every week. Just play.">
+<meta name="theme-color" content="#284379">
+<link rel="icon" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="The Breakroom — Games for SSU Nursing Students">
+<meta property="og:description" content="Free practice games for nursing students: Connections, NURSLE, and Wardplay. New puzzles every week.">
+<meta property="og:url" content="https://cassandrasmithssu.github.io/the-breakroom/">
+<meta property="og:image" content="https://cassandrasmithssu.github.io/the-breakroom/og-card.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-  :root{ --bg:#fafafa; --text:#121212; --card:#ffffff; }
+  :root{
+    --navy:#284379; --navy-deep:#1d3258; --navy-tint:#e9eef7;
+    --gray:#7F8082; --ink:#1c2434; --sub:#4c5566;
+    --paper:#f6f7f9; --card:#ffffff;
+    --gold:#f9df6d; --green:#a0c35a; --blue:#b0c4ef; --purple:#ba81c5;
+  }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
-  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);margin:0;padding:20px;display:flex;justify-content:center;}
-  .app{width:100%;max-width:520px;text-align:center;}
-  h1{font-size:1.8rem;margin:18px 0 4px;}
-  .tagline{color:#555;font-size:.95rem;margin:0 0 6px;}
-  .divider{border-bottom:1px solid #ddd;margin:16px 0;}
-  .cards{text-align:left;}
-  a.card{display:block;background:var(--card);border:2px solid #121212;border-radius:14px;padding:16px 18px;margin:14px 0;text-decoration:none;color:var(--text);transition:transform .08s;}
-  a.card:active{transform:scale(.98);}
-  .card .cname{font-weight:800;font-size:1.1rem;}
-  .card .cdesc{color:#555;font-size:.88rem;margin-top:4px;}
-  .card .cmeta{font-size:.75rem;margin-top:8px;color:#3a5fa8;font-weight:600;}
-  .soon{border-style:dashed;border-color:#bbb;color:#999;background:#fdfdfb;}
-  .soon .cname,.soon .cdesc{color:#aaa;}
-  .soon .cmeta{color:#bbb;}
-  footer{color:#999;font-size:.75rem;margin-top:26px;line-height:1.5;}
+  body{font-family:"Nunito",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--paper);color:var(--ink);margin:0;display:flex;flex-direction:column;align-items:center;min-height:100vh;}
+  a:focus-visible,button:focus-visible{outline:3px solid var(--navy);outline-offset:3px;border-radius:6px;}
+  .banner{width:100%;background:var(--navy);color:#fff;text-align:center;padding:26px 16px 22px;}
+  .wordmark{display:inline-flex;gap:6px;flex-wrap:wrap;justify-content:center;}
+  .wm-tile{width:38px;height:38px;border-radius:8px;background:#fff;color:var(--navy);font-weight:900;font-size:1.35rem;display:flex;align-items:center;justify-content:center;text-transform:uppercase;}
+  .wm-tile.accent{background:var(--gold);color:var(--navy-deep);}
+  @media (max-width:420px){ .wm-tile{width:30px;height:30px;font-size:1.05rem;border-radius:6px;} }
+  .banner .tag{margin:12px 0 0;font-size:1rem;color:#dfe6f2;font-weight:700;}
+  .banner .sub{margin:4px 0 0;font-size:.9rem;color:#c3cee3;}
+  main{width:100%;max-width:560px;padding:22px 16px 8px;flex:1;}
+  .cards{display:flex;flex-direction:column;gap:16px;}
+  a.card{display:flex;gap:16px;align-items:center;background:var(--card);border:2px solid var(--navy);border-radius:16px;padding:18px;text-decoration:none;color:var(--ink);transition:transform .12s, box-shadow .12s;}
+  a.card:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(40,67,121,.18);}
+  a.card:active{transform:scale(.985);}
+  @media (prefers-reduced-motion: reduce){ a.card, a.card:hover, a.card:active{transition:none;transform:none;box-shadow:none;} }
+  .preview{flex:0 0 auto;}
+  .cbody .cname{font-weight:900;font-size:1.25rem;color:var(--navy);}
+  .cbody .cdesc{color:var(--sub);font-size:.92rem;margin-top:4px;line-height:1.45;}
+  .cbody .cmeta{font-size:.82rem;margin-top:8px;color:var(--navy);font-weight:700;}
+  .card.soon{border:2px dashed var(--gray);background:#fbfbfc;display:flex;gap:16px;align-items:center;border-radius:16px;padding:18px;}
+  .card.soon .cname{font-weight:900;font-size:1.15rem;color:var(--sub);}
+  .card.soon .cdesc{color:var(--sub);font-size:.9rem;margin-top:4px;}
+  .card.soon .cmeta{font-size:.8rem;margin-top:8px;color:var(--sub);font-weight:700;}
+  footer{width:100%;background:var(--navy-deep);color:#cdd7e8;text-align:center;font-size:.85rem;padding:18px 16px;margin-top:26px;line-height:1.6;}
 </style>
 </head>
 <body>
-<div class="app">
-  <h1>☕ The Breakroom</h1>
-  <p class="tagline">Quick games for SSU nursing students. Take five — your brain earned it.</p>
-  <div class="divider"></div>
-  <div class="cards">
-    <a class="card" href="connections.html">
-      <div class="cname">🩺 Connections</div>
-      <div class="cdesc">Sixteen terms, four hidden groups. Find what goes together — and watch for traps.</div>
-      <div class="cmeta">New puzzle every Monday →</div>
-    </a>
-    <div class="card soon" aria-hidden="true">
-      <div class="cname">🔤 More games brewing…</div>
-      <div class="cdesc">New game formats are in the works. Watch the newsletter for launches.</div>
-      <div class="cmeta">Coming soon</div>
+  <header class="banner">
+    <div class="wordmark" role="img" aria-label="The Breakroom">
+      <span class="wm-tile" aria-hidden="true">B</span><span class="wm-tile" aria-hidden="true">R</span><span class="wm-tile" aria-hidden="true">E</span><span class="wm-tile accent" aria-hidden="true">A</span><span class="wm-tile" aria-hidden="true">K</span><span class="wm-tile" aria-hidden="true">R</span><span class="wm-tile" aria-hidden="true">O</span><span class="wm-tile" aria-hidden="true">O</span><span class="wm-tile" aria-hidden="true">M</span>
     </div>
-  </div>
+    <p class="tag">☕ Quick games for nursing students</p>
+    <p class="sub">Take five — your brain earned it.</p>
+  </header>
+  <main>
+    <div class="cards">
+      <a class="card" href="connections.html">
+        <svg class="preview" width="76" height="76" viewBox="0 0 76 76" aria-hidden="true">
+          <g>
+            <rect x="2"  y="2"  width="16" height="16" rx="4" fill="#f9df6d"/><rect x="21" y="2"  width="16" height="16" rx="4" fill="#f9df6d"/><rect x="40" y="2"  width="16" height="16" rx="4" fill="#f9df6d"/><rect x="59" y="2"  width="16" height="16" rx="4" fill="#f9df6d"/>
+            <rect x="2"  y="21" width="16" height="16" rx="4" fill="#a0c35a"/><rect x="21" y="21" width="16" height="16" rx="4" fill="#a0c35a"/><rect x="40" y="21" width="16" height="16" rx="4" fill="#a0c35a"/><rect x="59" y="21" width="16" height="16" rx="4" fill="#a0c35a"/>
+            <rect x="2"  y="40" width="16" height="16" rx="4" fill="#b0c4ef"/><rect x="21" y="40" width="16" height="16" rx="4" fill="#b0c4ef"/><rect x="40" y="40" width="16" height="16" rx="4" fill="#b0c4ef"/><rect x="59" y="40" width="16" height="16" rx="4" fill="#b0c4ef"/>
+            <rect x="2"  y="59" width="16" height="16" rx="4" fill="#ba81c5"/><rect x="21" y="59" width="16" height="16" rx="4" fill="#ba81c5"/><rect x="40" y="59" width="16" height="16" rx="4" fill="#ba81c5"/><rect x="59" y="59" width="16" height="16" rx="4" fill="#ba81c5"/>
+          </g>
+        </svg>
+        <span class="cbody">
+          <span class="cname">Connections</span>
+          <span class="cdesc" style="display:block;">Sixteen terms, four hidden groups. Find what goes together — and watch for traps.</span>
+          <span class="cmeta" style="display:block;">🗓️ New puzzle every Monday →</span>
+        </span>
+      </a>
+      <a class="card" href="nursle.html">
+        <svg class="preview" width="76" height="76" viewBox="0 0 76 76" aria-hidden="true">
+          <g font-family="Nunito, Arial, sans-serif" font-weight="900" font-size="11" text-anchor="middle">
+            <rect x="2"  y="16" width="13" height="13" rx="3" fill="#6aaa64"/><text x="8.5"  y="26" fill="#fff">N</text>
+            <rect x="17" y="16" width="13" height="13" rx="3" fill="#c9b458"/><text x="23.5" y="26" fill="#fff">U</text>
+            <rect x="32" y="16" width="13" height="13" rx="3" fill="#6aaa64"/><text x="38.5" y="26" fill="#fff">R</text>
+            <rect x="47" y="16" width="13" height="13" rx="3" fill="#787c7e"/><text x="53.5" y="26" fill="#fff">S</text>
+            <rect x="62" y="16" width="13" height="13" rx="3" fill="#6aaa64"/><text x="68.5" y="26" fill="#fff">E</text>
+            <rect x="2"  y="33" width="13" height="13" rx="3" fill="#6aaa64"/><text x="8.5"  y="43" fill="#fff">N</text>
+            <rect x="17" y="33" width="13" height="13" rx="3" fill="#6aaa64"/><text x="23.5" y="43" fill="#fff">U</text>
+            <rect x="32" y="33" width="13" height="13" rx="3" fill="#6aaa64"/><text x="38.5" y="43" fill="#fff">R</text>
+            <rect x="47" y="33" width="13" height="13" rx="3" fill="#6aaa64"/><text x="53.5" y="43" fill="#fff">S</text>
+            <rect x="62" y="33" width="13" height="13" rx="3" fill="#6aaa64"/><text x="68.5" y="43" fill="#fff">E</text>
+          </g>
+        </svg>
+        <span class="cbody">
+          <span class="cname">NURSLE</span>
+          <span class="cdesc" style="display:block;">Guess the 5-letter nursing word in six tries. Keep your streak alive.</span>
+          <span class="cmeta" style="display:block;">📅 New word every weekday →</span>
+        </span>
+      </a>
+      <a class="card" href="wardplay.html">
+        <svg class="preview" width="76" height="76" viewBox="0 0 76 76" aria-hidden="true">
+          <g>
+            <rect x="2"  y="2"  width="13" height="13" rx="3" fill="#1d3258"/>
+            <rect x="17" y="2"  width="13" height="13" rx="3" fill="#fff" stroke="#7F8082"/><rect x="32" y="2" width="13" height="13" rx="3" fill="#fff" stroke="#7F8082"/><rect x="47" y="2" width="13" height="13" rx="3" fill="#fff" stroke="#7F8082"/><rect x="62" y="2" width="13" height="13" rx="3" fill="#fff" stroke="#7F8082"/>
+            <rect x="2"  y="17" width="13" height="13" rx="3" fill="#fff" stroke="#7F8082"/><rect x="17" y="17" width="13" height="13" rx="3" fill="#f9df6d"/><rect x="32" y="17" width="13" height="13" rx="3" fill="#dbe5f5"/><rect x="47" y="17" width="13" height="13" rx="3" fill="#dbe5f5"/><rect x="62" y="17" width="13" height="13" rx="3" fill="#dbe5f5"/>
+            <rect x="2"  y="32" width="13" height="13" rx="3" fill="#fff" stroke="#7F8082"/><rect x="17" y="32" width="13" height="13" rx="3" fill="#dbe5f5"/><rect x="32" y="32" width="13" height="13" rx="3" fill="#fff" stroke="#7F8082"/><rect x="47" y="32" width="13" height="13" rx="3" fill="#fff" stroke="#7F8082"/><rect x="62" y="32" width="13" height="13" rx="3" fill="#fff" stroke="#7F8082"/>
+            <rect x="2"  y="47" width="13" height="13" rx="3" fill="#fff" stroke="#7F8082"/><rect x="17" y="47" width="13" height="13" rx="3" fill="#dbe5f5"/><rect x="32" y="47" width="13" height="13" rx="3" fill="#fff" stroke="#7F8082"/><rect x="47" y="47" width="13" height="13" rx="3" fill="#fff" stroke="#7F8082"/><rect x="62" y="47" width="13" height="13" rx="3" fill="#fff" stroke="#7F8082"/>
+            <rect x="2"  y="62" width="13" height="13" rx="3" fill="#fff" stroke="#7F8082"/><rect x="17" y="62" width="13" height="13" rx="3" fill="#dbe5f5"/><rect x="32" y="62" width="13" height="13" rx="3" fill="#fff" stroke="#7F8082"/><rect x="47" y="62" width="13" height="13" rx="3" fill="#fff" stroke="#7F8082"/><rect x="62" y="62" width="13" height="13" rx="3" fill="#1d3258"/>
+          </g>
+        </svg>
+        <span class="cbody">
+          <span class="cname">Wardplay</span>
+          <span class="cdesc" style="display:block;">A mini crossword you can solve on a coffee break. Ward words and wordplay.</span>
+          <span class="cmeta" style="display:block;">⏱️ New puzzle every Monday →</span>
+        </span>
+      </a>
+      <div class="card soon">
+        <svg class="preview" width="76" height="76" viewBox="0 0 76 76" aria-hidden="true">
+          <rect x="8" y="8" width="60" height="60" rx="12" fill="none" stroke="#7F8082" stroke-width="3" stroke-dasharray="8 6"/>
+          <text x="38" y="47" text-anchor="middle" font-family="Nunito, Arial, sans-serif" font-weight="900" font-size="26" fill="#7F8082">?</text>
+        </svg>
+        <span class="cbody">
+          <span class="cname">More games brewing…</span>
+          <span class="cdesc" style="display:block;">New game formats are in the works. Watch the newsletter for launches.</span>
+          <span class="cmeta" style="display:block;">Coming soon</span>
+        </span>
+      </div>
+    </div>
+  </main>
   <footer>
-    Made by Dr. Smith for practice and review.<br>
-    These games are for learning — they are not graded and nothing is recorded.
+    Made by Dr. Cassandra Smith, DNP, RN for nurses and nursing students at Shawnee State University in Portsmouth Ohio and beyond.
   </footer>
-</div>
 </body>
 </html>
